@@ -1,0 +1,30 @@
+image: mcr.microsoft.com/dotnet/core/sdk:3.0
+
+pipelines:
+  default:
+    - step:
+        caches:
+          - dotnetcore
+        script: 
+          - export LABEL='boisaude-api_'$(date +'Y'%Y'- M'%m'- D'%d_%H':'%M':'%S)
+          - apt-get update && apt-get install -y zip
+          - export PROJECT_NAME=API
+          - dotnet restore
+          - dotnet build $PROJECT_NAME
+
+          - zipfile="API"
+          - cd /opt/atlassian/pipelines/agent/build/API/bin/Debug/netcoreapp3.0/
+          - dir="*"
+          - zip $zipfile.zip $dir
+          - pipe: atlassian/aws-elasticbeanstalk-deploy:0.6.0
+            variables:
+              AWS_ACCESS_KEY_ID: AKIAJVUZYCBKWQOBU6OA
+              AWS_SECRET_ACCESS_KEY: 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
+              AWS_DEFAULT_REGION: "sa-east-1"
+              APPLICATION_NAME: 'API'
+              ENVIRONMENT_NAME: 'boisaude-api'
+              COMMAND: 'all'
+              ZIP_FILE: 'API.zip'
+              S3_BUCKET: 'api-new-test'
+              VERSION_LABEL: $LABEL
+              Wait: 'true'

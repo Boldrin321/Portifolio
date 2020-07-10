@@ -1,0 +1,68 @@
+<html lang="pt" origin="">
+<head>
+	<meta charset="utf-8">
+	<script src="jquery.js"></script>
+	<title>Segmento 8</title>
+</head>
+<body>
+	<form class="form" method="post" id="myForm">
+		<p>Name: </p>
+		<p><input class="name" name="name" id="name" type="text" /></p>
+		<p>Email: </p>
+		<p><input class="email" name="email" id="email" type="text" /></p>
+		<p>IpAddress: </p>
+		<p><input class="ipAddress" name="ipAddress" id="ipAddress" type="text" /></p>
+		<p>Segment Id: 8</p>
+		<p><input class="segmentId" name="segmentId" id="segmentId" type="hidden" value="8"/></p>
+		<p><input type="submit" id="send"/>   <input type="button" onclick="location.href='C:/dev/sln_MauticApi/Mautic-html/Index.html';" value="Voltar" /></p>
+	</form>
+	<script>
+		$('#myForm').submit(function (e) {
+			e.preventDefault();
+			
+			var namePes = document.getElementById('name').value;
+			var emailPes = document.getElementById('email').value;
+			var ipPes = document.getElementById('ipAddress').value;
+			var segmentPes = document.getElementById('segmentId').value;
+			segmentPes = parseInt(segmentPes);
+			var settings = {
+			  "url": "http://localhost:51045/api/Contact",
+			  "method": "POST",
+			  "timeout": 0,
+			  "headers": {
+				"Content-Type": "application/json"
+			  },
+			  "data": JSON.stringify({"SegmentId":segmentPes,"Name":namePes,"Email":emailPes,"IpAddress":ipPes}),
+			};
+
+			$.ajax(settings).done(function (response) {
+			  console.log(response);
+			});
+		});
+		/*$('#myForm').submit(function (e) {
+			e.preventDefault();
+			var myHeaders = new Headers();
+			myHeaders.append("Content-Type", "application/json");
+			
+			var namePes = document.getElementById('name').value;
+			var emailPes = document.getElementById('email').value;
+			var ipPes = document.getElementById('ipAddress').value;
+			var segmentPes = document.getElementById('segmentId').value;
+
+			var raw = JSON.stringify({"SegmentId":parseInt(segmentPes),"Name":namePes,"Email":emailPes,"IpAddress":ipPes});
+
+			var requestOptions = {
+			  method: 'POST',
+			  headers: myHeaders,
+			  body: raw,
+			  redirect: 'follow'
+			};
+
+			fetch("http://localhost:51045/api/Contact", requestOptions)
+			  .then(response => response.text())
+			  .then(result => console.log(result))
+			  .catch(error => console.log('error', error));
+		});*/
+	</script>
+</body>
+</html>
