@@ -36,8 +36,8 @@ namespace API.Controllers
 
 
             var campaign = _context.Campaign
-                                        .Where<Campaign>(c => c.Name == lead.CampaignName)
-                                        .Single();
+                                        //.Where<Campaign>(c => c.Name == lead.CampaignName)
+                                        //.Single();
 
             var configuration = Configuration.GetConfiguration();
             _OctopusKey = configuration["Variables:Octopuskey"];
@@ -48,7 +48,7 @@ namespace API.Controllers
             var response2 = _mailService.Send(lead, campaign, _sendgrid);
             _context.SaveChanges();
 
-            return new JsonResult(new { success = true, octopusresponse = response1.Content, sengridresponse = response2.Result, operationTime = teste });
+            return new JsonResult(new { success = true, OctopusResult = response1, SendGridResult = response2,operationTime = teste });
         }
 
         [HttpGet]
